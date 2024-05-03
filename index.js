@@ -30,6 +30,25 @@ async function run() {
       res.send(result);
     });
 
+    // load only truck data
+    app.get("/truck", async (req, res) => {
+      const query = { category: "truck" };
+      const result = await toysCollection.find(query).toArray();
+      res.send(result);
+    });
+    // load only cars data
+    app.get("/cars", async (req, res) => {
+      const query = { category: "cars" };
+      const result = await toysCollection.find(query).toArray();
+      res.send(result);
+    });
+    // load only patrol Cars data
+    app.get("/patrol", async (req, res) => {
+      const query = { category: "Patrol" };
+      const result = await toysCollection.find(query).toArray();
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
