@@ -31,7 +31,7 @@ async function run() {
     });
 
     // load only truck data
-    app.get("/truck", async (req, res) => {
+    app.get("/trucks", async (req, res) => {
       const query = { category: "truck" };
       const result = await toysCollection.find(query).toArray();
       res.send(result);
