@@ -43,7 +43,7 @@ async function run() {
       res.send(result);
     });
     // load only patrol Cars data
-    app.get("/patrol", async (req, res) => {
+    app.get("/patrols", async (req, res) => {
       const query = { category: "Patrol" };
       const result = await toysCollection.find(query).toArray();
       res.send(result);
