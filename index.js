@@ -23,6 +23,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     client.connect(); //await remove
     const toysCollection = client.db("toyStore").collection("toys");
+    const ordersCollection = client.db("toyStore").collection("orders");
 
     app.get("/toys", async (req, res) => {
       const cursor = toysCollection.find();
@@ -30,6 +31,12 @@ async function run() {
       res.send(result);
     });
     app.get("/toys/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await toysCollection.findOne(query);
+      res.send(result);
+    });
+    app.get("/orders/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await toysCollection.findOne(query);
@@ -53,6 +60,11 @@ async function run() {
       const query = { category: "Patrol" };
       const result = await toysCollection.find(query).toArray();
       res.send(result);
+    });
+
+    app.post("/orders", async (req, res) => {
+      const orders = req.body;
+      console.log(orders);
     });
 
     // Send a ping to confirm a successful connection
