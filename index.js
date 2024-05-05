@@ -11,6 +11,24 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 //
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ub65wqu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const jwtVerify = (req, res, next) => {
+  const authorization = req.headers.authorization;
+  if (!authorization) {
+    return res
+      .status(401)
+      .send({ error: true, message: "unauthorized access" });
+      
+  }
+  const token=authorization.split(' ')[1];
+  jwt.verify(token,process.env.ACCESSTOKEN, function(error,decoded){
+    if(error){
+      return res.send({error:true,message:'unauthorized'})
+    }
+    req.decoded=decoded;
+    next();
+    
+  })
+};
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -45,7 +63,8 @@ async function run() {
       const result = await toysCollection.findOne(query);
       res.send(result);
     });
-    app.get("/orders", async (req, res) => {
+    app.get("/orders", jwtVerify, async (req, res) => {
+    
       console.log(req.query.email);
       let query = {};
       if (req.query?.email) {
@@ -80,14 +99,15 @@ async function run() {
       res.send(result);
     });
     //! jwt accessToken
-    app.post("/jwt", (req, res) => {
-      const user = req.body;
-      console.log(user);
-      const token = jwt.sign(usre, process.env.ACCESSTOKEN, {
-        expiresIn: "1h",
-      });
-      res.send(token);
-    });
+      // app.post("/jwt", (req, res) => {
+      //   const user = req.headers;
+      //   console.log(user);
+      //   const token = jwt.sign(user, process.env.ACCESSTOKEN, {
+      //     expiresIn: "1h",
+      //   });
+      //   console.log(token);
+      //   res.send({ token });
+      // });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
