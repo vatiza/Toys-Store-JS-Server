@@ -17,17 +17,15 @@ const jwtVerify = (req, res, next) => {
     return res
       .status(401)
       .send({ error: true, message: "unauthorized access" });
-      
   }
-  const token=authorization.split(' ')[1];
-  jwt.verify(token,process.env.ACCESSTOKEN, function(error,decoded){
-    if(error){
-      return res.send({error:true,message:'unauthorized'})
+  const token = authorization.split(" ")[1];
+  jwt.verify(token, process.env.ACCESSTOKEN, function (error, decoded) {
+    if (error) {
+      return res.send({ error: true, message: "unauthorized" });
     }
-    req.decoded=decoded;
+    req.decoded = decoded;
     next();
-    
-  })
+  });
 };
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -64,8 +62,6 @@ async function run() {
       res.send(result);
     });
     app.get("/orders", jwtVerify, async (req, res) => {
-    
-      console.log(req.query.email);
       let query = {};
       if (req.query?.email) {
         query = { email: req.query.email };
@@ -99,15 +95,15 @@ async function run() {
       res.send(result);
     });
     //! jwt accessToken
-      // app.post("/jwt", (req, res) => {
-      //   const user = req.headers;
-      //   console.log(user);
-      //   const token = jwt.sign(user, process.env.ACCESSTOKEN, {
-      //     expiresIn: "1h",
-      //   });
-      //   console.log(token);
-      //   res.send({ token });
-      // });
+    // app.post("/jwt", (req, res) => {
+    //   const user = req.headers;
+    //   console.log(user);
+    //   const token = jwt.sign(user, process.env.ACCESSTOKEN, {
+    //     expiresIn: "1h",
+    //   });
+    //   console.log(token);
+    //   res.send({ token });
+    // });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
