@@ -5,7 +5,10 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 require("dotenv").config();
+
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+
+//
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ub65wqu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -42,6 +45,15 @@ async function run() {
       const result = await toysCollection.findOne(query);
       res.send(result);
     });
+    app.get("/orders", async (req, res) => {
+      console.log(req.query.email);
+      let query={}
+      if(req.query?.email){
+        query={email:req.query.email}
+      }
+      const result = await ordersCollection.find(query).toArray();
+      res.send(result);
+    });
 
     // load only truck data
     app.get("/trucks", async (req, res) => {
@@ -64,7 +76,8 @@ async function run() {
 
     app.post("/orders", async (req, res) => {
       const orders = req.body;
-      console.log(orders);
+      const result = await ordersCollection.insertOne(orders);
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
