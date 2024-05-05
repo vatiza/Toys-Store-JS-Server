@@ -5,7 +5,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 require("dotenv").config();
-
+var jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 //
@@ -47,9 +47,9 @@ async function run() {
     });
     app.get("/orders", async (req, res) => {
       console.log(req.query.email);
-      let query={}
-      if(req.query?.email){
-        query={email:req.query.email}
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
       }
       const result = await ordersCollection.find(query).toArray();
       res.send(result);
@@ -78,6 +78,15 @@ async function run() {
       const orders = req.body;
       const result = await ordersCollection.insertOne(orders);
       res.send(result);
+    });
+    //! jwt accessToken
+    app.post("/jwt", (req, res) => {
+      const user = req.body;
+      console.log(user);
+      const token = jwt.sign(usre, process.env.ACCESSTOKEN, {
+        expiresIn: "1h",
+      });
+      res.send(token);
     });
 
     // Send a ping to confirm a successful connection
