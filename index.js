@@ -62,6 +62,7 @@ async function run() {
       res.send(result);
     });
     app.get("/orders", jwtVerify, async (req, res) => {
+      const decoded = req.decoded;
       let query = {};
       if (req.query?.email) {
         query = { email: req.query.email };
