@@ -96,15 +96,15 @@ async function run() {
       res.send(result);
     });
     //! jwt accessToken
-    // app.post("/jwt", (req, res) => {
-    //   const user = req.headers;
-    //   console.log(user);
-    //   const token = jwt.sign(user, process.env.ACCESSTOKEN, {
-    //     expiresIn: "1h",
-    //   });
-    //   console.log(token);
-    //   res.send({ token });
-    // });
+    app.post("/jwt", (req, res) => {
+      const user = req.headers;
+      console.log(user);
+      const token = jwt.sign(user, process.env.ACCESSTOKEN, {
+        expiresIn: "1h",
+      });
+      console.log(token);
+      res.send({ token });
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
